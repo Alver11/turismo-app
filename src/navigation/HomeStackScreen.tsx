@@ -3,13 +3,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '@/screens/HomeScreen';
 import EventDetailScreen from '@/screens/EventDetailScreen';
 import CategoryDetailScreen from '@/screens/CategoryDetailScreen';
+import TouristPlaceScreen from "../screens/TouristPlaceScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function HomeStackScreen({ events, categories, toggleDarkMode, isDarkMode }: any) {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen
+        <Stack.Screen
                 name="Home"
                 children={() => (
                     <HomeScreen
@@ -27,6 +28,10 @@ export default function HomeStackScreen({ events, categories, toggleDarkMode, is
             <Stack.Screen
                 name="CategoryDetailScreen"
                 component={CategoryDetailScreen}
+            />
+            <Stack.Screen
+                name="TouristPlaceScreen"
+                component={TouristPlaceScreen}
             />
         </Stack.Navigator>
     );

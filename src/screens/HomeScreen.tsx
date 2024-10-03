@@ -4,6 +4,7 @@ import { useColorScheme } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -57,13 +58,13 @@ export default function HomeScreen({ events, categories, toggleDarkMode, isDarkM
 
     const renderCategoryItem = ({ item }: { item: any }) => {
         return (
-            <TouchableOpacity onPress={() => navigateToCategoryDetail(item)}>
-                <View className="mb-5">
+            <TouchableOpacity onPress={() => navigateToCategoryDetail(item)} style={{ flex: 1, margin: 5 }}>
+                <View className="bg-white shadow-md rounded-lg p-2 items-center">
                     <Image
                         source={{ uri: item.image }}
-                        style={{ width: viewportWidth * 0.8, height: 150, borderRadius: 10, marginBottom: 10 }}
+                        style={{ width: viewportWidth * 0.4, height: viewportWidth * 0.4, borderRadius: 10 }}
                     />
-                    <Text className="text-xl font-bold text-black dark:text-white">{item.name}</Text>
+                    <Text className="text-lg font-bold text-center text-black dark:text-white mt-2">{item.name}</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -76,6 +77,8 @@ export default function HomeScreen({ events, categories, toggleDarkMode, isDarkM
             keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
             className={`flex-1 p-4 ${colorScheme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
+            numColumns={2} // Número de columnas fijo
+            key={2}  // Forzamos una nueva clave cuando el número de columnas es 2
             ListHeaderComponent={
                 <>
                     {/* Logo en la parte superior izquierda */}
@@ -128,17 +131,23 @@ export default function HomeScreen({ events, categories, toggleDarkMode, isDarkM
                         showsHorizontalScrollIndicator={false}
                     />
                     <Text className="text-2xl font-bold mt-10 text-black dark:text-white">Categorías</Text>
-                    {/* Barra de búsqueda */}
-                    <View className="px-4 mb-4">
+
+                    {/* Barra de búsqueda con botón para limpiar */}
+                    <View className="px-4 mb-4 flex-row items-center">
                         <TextInput
                             placeholder="Buscar categorías..."
                             placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
                             value={searchText}
                             onChangeText={setSearchText}
-                            className={`p-3 rounded-lg border ${
+                            className={`flex-1 p-3 rounded-lg border ${
                                 colorScheme === 'dark' ? 'border-gray-700 bg-gray-800 text-white' : 'border-gray-300 bg-white text-black'
                             }`}
                         />
+                        {searchText.length > 0 && (
+                            <TouchableOpacity onPress={() => setSearchText('')} className="ml-2">
+                                <Ionicons name="close-circle" size={24} color={colorScheme === 'dark' ? 'white' : 'black'} />
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </>
             }
