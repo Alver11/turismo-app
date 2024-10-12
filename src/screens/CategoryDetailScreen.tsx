@@ -32,7 +32,7 @@ export default function CategoryDetailScreen({ route }: any) {
 
         return (
             <TouchableOpacity onPress={() => navigateToTouristPlaceDetail(item)}>
-                <View className="mb-5 bg-white rounded-xl shadow-md overflow-hidden">
+                <View className="mb-5 m-5 bg-white rounded-xl shadow-md overflow-hidden">
                     {frontImage && (
                         <Image
                             source={{ uri: frontImage }}
@@ -47,7 +47,6 @@ export default function CategoryDetailScreen({ route }: any) {
                         {item.districtName && (
                             <Text className="text-gray-600">District: {item.districtName}</Text>
                         )}
-                        {/*<Text className="text-gray-600 mt-2">{item.description}</Text>*/}
                     </View>
                 </View>
             </TouchableOpacity>
@@ -55,23 +54,37 @@ export default function CategoryDetailScreen({ route }: any) {
     };
 
     return (
-        <View className={`flex-1 p-5 ${colorScheme === 'dark' ? 'bg-gray-900' : 'bg-gray-200'}`}>
+        <View className={`flex-1 ${colorScheme === 'dark' ? 'bg-gray-900' : 'bg-gray-200'}`}>
             <FlatList
                 data={filteredTouristPlaces}
                 renderItem={renderTouristPlace}
                 keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 110 }}
                 ListHeaderComponent={
                     <>
-                        <Image
-                            source={{ uri: category.image }}
-                            className="w-full h-48 rounded-xl"
-                        />
-                        <Text className="text-xl font-bold p-4 text-center">{category.name}</Text>
+                        <View style={{ position: 'relative' }}>
+                            <Image
+                                source={{ uri: category.image }}
+                                className="w-full h-48"
+                            />
+                            <View style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                width: '100%',
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente
+                                padding: 10,
+                            }}>
+                                <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>
+                                    {category.name}
+                                </Text>
+                            </View>
+                        </View>
                         <TextInput
                             placeholder="Buscar lugares turísticos..."
                             value={searchText}
                             onChangeText={setSearchText}
-                            className="p-3 mb-4 bg-white rounded-lg"
+                            className="p-3 m-5 bg-white rounded-lg"
                         />
                     </>
                 }

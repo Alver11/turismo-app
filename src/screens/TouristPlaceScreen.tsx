@@ -33,7 +33,7 @@ export default function TouristPlaceScreen({ route }: any) {
     );
 
     return (
-        <ScrollView style={{ flex: 1, padding: 20, backgroundColor: colorScheme === 'dark' ? '#1a202c' : '#f7fafc' }}>
+        <ScrollView style={{ flex: 1, padding: 20, backgroundColor: colorScheme === 'dark' ? '#1a202c' : '#f7fafc' }} contentContainerStyle={{ paddingBottom: 110 }}>
             {/* Imagen principal (portada) */}
             {frontImage && (
                 <Image

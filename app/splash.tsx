@@ -18,7 +18,7 @@ export default function SplashScreen({setIsLoading, isDarkMode}: SplashProps) {
                 ref={animation}
                 loop={false}
                 style={{flex: 1, width: "100%", height: "100%", alignItems: 'center', justifyContent: 'center'}}
-                source={require('@/assets/splashCordillera.json')}
+                source={require('../src/assets/splashCordillera.json')}
                 onAnimationFinish={() => {
                     setIsLoading(false);
                 }}

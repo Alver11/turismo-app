@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://apiturismo.walabi.com.py/api/v1/',
+    baseURL: 'http://api.cordillera.gov.py/api/v1/',
     headers: {
         'Content-Type': 'application/json',
     },
