@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, RefreshControl } from 'react-native';
 import { useColorScheme } from 'react-native';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Screen } from '../../../../src/components/Screen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
+import TouristPlaceCard from '../../../../src/components/TouristPlaceCard';
 
 export default function CategoryDetailScreen() {
     const { category } = useLocalSearchParams();
@@ -16,13 +17,14 @@ export default function CategoryDetailScreen() {
 
     useEffect(() => {
         const filtered = parsedCategory?.touristPlaces?.filter((place: any) =>
-            place.name.toLowerCase().includes(searchText.toLowerCase())
+            place.name.toLowerCase().includes(searchText.toLowerCase()) ||
+            place.categories.some((cat: any) => cat.name.toLowerCase().includes(searchText.toLowerCase()))
         );
 
         if (JSON.stringify(filtered) !== JSON.stringify(filteredTouristPlaces)) {
             setFilteredTouristPlaces(filtered);
         }
-    }, [searchText, parsedCategory.touristPlaces]);
+    }, [searchText, parsedCategory?.touristPlaces]);
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -30,33 +32,18 @@ export default function CategoryDetailScreen() {
         setRefreshing(false);
     }, []);
 
-    const renderTouristPlace = ({ item }: { item: any }) => {
-        const frontImage = item.images.find((img: any) => img.frontPage)?.filePath;
-
-        return (
-            <TouchableOpacity onPress={() => {/* Navegar a TouristPlaceScreen */}}>
-                <View className="mb-5 m-5 bg-white rounded-xl shadow-md overflow-hidden">
-                    {frontImage && (
-                        <Image
-                            source={{ uri: frontImage }}
-                            className="w-full h-40 rounded-t-xl"
-                            contentFit="cover"
-                            cachePolicy="memory-disk"
-                        />
-                    )}
-                    <View className="p-4">
-                        <Text className="text-lg font-bold text-gray-800">{item.name}</Text>
-                        {item.address && (
-                            <Text className="text-gray-600">Address: {item.address}</Text>
-                        )}
-                        {item.districtName && (
-                            <Text className="text-gray-600">District: {item.districtName}</Text>
-                        )}
-                    </View>
-                </View>
-            </TouchableOpacity>
-        );
-    };
+    const renderTouristPlace = ({ item }: { item: any }) => (
+        <TouristPlaceCard
+            place={item}
+            onPress={() => {
+                router.push({
+                    pathname: '/home/tourist-item',  // Ruta del screen destino
+                    params: { place: JSON.stringify(item) },
+                });
+            }}
+            refreshList={() => {}}
+        />
+    );
 
     return (
         <Screen>
@@ -70,7 +57,7 @@ export default function CategoryDetailScreen() {
 
             <FlatList
                 data={filteredTouristPlaces}
-                renderItem={renderTouristPlace}
+                renderItem={renderTouristPlace}  // Usamos el componente TouristPlaceCard para renderizar cada lugar
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 110 }}
@@ -101,7 +88,7 @@ export default function CategoryDetailScreen() {
                         <View className="flex-row items-center px-4 m-5 mb-4 bg-white rounded-lg border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
                             <Ionicons name="search" size={24} color={colorScheme === 'dark' ? '#888' : '#555'} />
                             <TextInput
-                                placeholder="Buscar..."
+                                placeholder="Buscar por nombre, categoría, dirección o distrito"
                                 placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
                                 value={searchText}
                                 onChangeText={setSearchText}

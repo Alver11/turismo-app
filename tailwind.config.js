@@ -13,9 +13,10 @@ module.exports = {
         'off-white': {
           DEFAULT: '#E3E3E3',
         },
-        dark: {
-          DEFAULT: '#1C1C1E',
-        },
+        // dark: {
+        //   DEFAULT: '#1C1C1E',
+        // },
+        darkMode: 'media',
         'soft-dark': {
           DEFAULT: '#2A2A2F',
         },

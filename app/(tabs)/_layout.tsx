@@ -23,7 +23,7 @@ export default function TabsLayout() {
                         width: 0,
                         height: 1,
                     },
-                    elevation: 3, // Suaviza la sombra
+                    elevation: 3,
                 },
                 tabBarItemStyle: {
                     paddingVertical: 5,
@@ -32,8 +32,8 @@ export default function TabsLayout() {
                 tabBarButton: (props) => (
                     <TouchableOpacity
                         style={{
-                            backgroundColor: 'transparent', // Fondo transparente en lugar de blanco
-                            borderRadius: 10, // Ajusta el borde redondeado
+                            backgroundColor: 'transparent',
+                            borderRadius: 10,
                             paddingVertical: 5,
                         }}
                         {...props}

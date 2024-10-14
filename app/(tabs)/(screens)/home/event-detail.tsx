@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { Screen } from '../../../../src/components/Screen';
 import { Image } from 'expo-image';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import React, { useState } from 'react';
 
 export default function EventDetail() {
     const { event } = useLocalSearchParams();
@@ -13,6 +14,8 @@ export default function EventDetail() {
     const imageWidth = viewportWidth - paddingHorizontal * 2;
     const colorScheme = useColorScheme();
 
+    const [showFullDescription, setShowFullDescription] = useState(false);
+
     interface ImageItem {
         id: number;
         filePath: string;
@@ -21,7 +24,7 @@ export default function EventDetail() {
     const renderItem = ({ item }: { item: ImageItem }) => (
         <Image
             source={{ uri: item.filePath }}
-            className="w-full m-2 rounded-lg"
+            className="w-full m-1 rounded-lg"
             style={{ height: 300, width: imageWidth }}
             contentFit="cover"
             cachePolicy="memory-disk"
@@ -35,6 +38,10 @@ export default function EventDetail() {
         Linking.openURL(url);
     };
 
+    const toggleDescription = () => {
+        setShowFullDescription(!showFullDescription);
+    };
+
     return (
         <Screen>
             <Stack.Screen
@@ -46,6 +53,23 @@ export default function EventDetail() {
                 }}
             />
             <ScrollView>
+                {/* Mueve el título y la fecha aquí, antes de las imágenes */}
+                <View className="p-5">
+                    {/* Título y Fecha */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View style={{ width: 3, height: 30, backgroundColor: 'red', marginRight: 10 }} />
+                            <Text className={`text-2xl font-bold ${colorScheme === 'dark' ? 'text-white' : 'text-black'}`}>
+                                {parsedEvent.name}
+                            </Text>
+                        </View>
+                        <Text className={`text-sm ${colorScheme === 'dark' ? 'text-white' : 'text-black'}`}>
+                            {parsedEvent.updated_at ? parsedEvent.updated_at : 'Fecha no disponible'}
+                        </Text>
+                    </View>
+                </View>
+
+                {/* Luego renderiza las imágenes después del título */}
                 <FlatList
                     data={parsedEvent.images}
                     renderItem={renderItem}
@@ -58,12 +82,11 @@ export default function EventDetail() {
                     style={{ paddingHorizontal }}
                 />
 
-                {/* Información del Evento o noticia */}
+                {/* Información adicional */}
                 <View className="p-5">
-                    <Text className={`text-2xl font-bold ${colorScheme === 'dark' ? 'text-white' : 'text-black'}`}>
-                        {parsedEvent.name}
-                    </Text>
-                    <Text className={`text-base mt-2 leading-6 ${colorScheme === 'dark' ? 'text-white' : 'text-black'}`}>
+                    <Text
+                        className={`text-base mt-2 leading-6 ${colorScheme === 'dark' ? 'text-white' : 'text-black'}`}
+                    >
                         {parsedEvent.description}
                     </Text>
 

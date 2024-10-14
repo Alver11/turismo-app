@@ -49,14 +49,14 @@ export default function Home() {
 
     const renderCategoryItem = ({ item }: { item: any }) => (
         <TouchableOpacity onPress={() => navigateToCategoryDetail(item)} style={{ flex: 1, margin: 5 }}>
-            <View className="bg-gray-200 p-2 shadow-md rounded-lg items-center">
+            <View className="bg-gray-200 dark:bg-gray-800 p-2 shadow-md rounded-lg items-center">
                 <Image
                     source={{ uri: item.image }}
                     style={{ width: viewportWidth * 0.4, height: viewportWidth * 0.4, borderRadius: 10 }}
                     contentFit="cover"
                     cachePolicy="memory-disk"
                 />
-                <Text className="text-lg font-bold text-center dark:text-white mt-2">{item.name}</Text>
+                <Text className="text-lg font-bold text-center dark:text-gray-300 mt-2">{item.name}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -80,7 +80,7 @@ export default function Home() {
                 renderItem={renderCategoryItem}
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 110 }}
+                contentContainerStyle={{ paddingBottom: 30 }}
                 className="p-4"
                 numColumns={2}
                 refreshControl={
@@ -100,41 +100,59 @@ export default function Home() {
 
                                 return (
                                     frontImage && (
-                                        <TouchableOpacity onPress={() => navigateToEventDetail(item)}>
-                                            <View style={{ marginRight: 10, position: 'relative' }}>
-                                                <Image
-                                                    source={{ uri: frontImage }}
-                                                    style={{
-                                                        width: viewportWidth * 0.8,
-                                                        height: 200,
-                                                        borderRadius: 15,
-                                                    }}
-                                                    contentFit="cover"
-                                                    cachePolicy="memory-disk"
-                                                />
-                                                <View
-                                                    style={{
-                                                        position: 'absolute',
-                                                        bottom: 0,
-                                                        width: '100%',
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                        padding: 10,
-                                                        borderBottomLeftRadius: 15,
-                                                        borderBottomRightRadius: 15,
-                                                    }}
-                                                >
-                                                    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                                        <View
+                                            style={{ width: viewportWidth * 0.85 }}
+                                            className="mr-2 bg-white dark:bg-gray-800 rounded-lg p-2">
+                                            {/* Imagen con bordes redondeados */}
+                                            <Image
+                                                source={{ uri: frontImage }}
+                                                style={{
+                                                    width: '100%',
+                                                    height: 200,
+                                                    borderRadius: 15,
+                                                    backgroundColor: '#ffffff'
+                                                }}
+                                                contentFit="cover"
+                                                cachePolicy="memory-disk"
+                                            />
+
+                                            {/* Contenido debajo de la imagen */}
+                                            <View style={{ padding: 10, flexDirection: 'row' }}>
+                                                {/* Línea vertical */}
+                                                <View className="bg-black dark:bg-gray-300 mr-2" style={{ width: 3 }} />
+
+                                                {/* Texto de la noticia */}
+                                                <View style={{ flex: 1 }}>
+                                                    <Text className="text-lg font-bold text-gray-700 dark:text-gray-300">
                                                         {item.name}
                                                     </Text>
+                                                    <Text className="text-sm text-gray-700 dark:text-gray-400" style={{ marginVertical: 5 }}>
+                                                        {item.description.length > 100
+                                                            ? `${item.description.substring(0, 100)}...`
+                                                            : item.description}
+                                                    </Text>
+
+                                                    {/* Fecha y ver más */}
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <Text className="text-sm text-gray-700 dark:text-gray-400">
+                                                            { item.updated_at }
+                                                        </Text>
+                                                        <TouchableOpacity onPress={() => navigateToEventDetail(item)}>
+                                                            <Text className="text-lg font-bold text-orange-700">
+                                                                ver más...
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
                                             </View>
-                                        </TouchableOpacity>
+                                        </View>
                                     )
                                 );
                             }}
                             keyExtractor={(item) => item.id.toString()}
                             showsHorizontalScrollIndicator={false}
                         />
+
                         <Text className="text-lg pt-2">
                             Categorías
                         </Text>

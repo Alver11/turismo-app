@@ -1,101 +1,138 @@
 import { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, Dimensions } from 'react-native';
-import { useColorScheme } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { View, FlatList, TextInput, TouchableOpacity, Dimensions, Text, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Screen } from '../../../../src/components/Screen';
 import { useDataContext } from '../../../../src/context/DataContext';
-import { Image } from 'expo-image';
+import { Stack, useRouter } from 'expo-router';
+import TouristPlaceCard from '../../../../src/components/TouristPlaceCard';  // Importamos el componente
+import AsyncStorage from "@react-native-async-storage/async-storage";  // Para manejar likes (me gusta)
 
 export default function TouristListScreen() {
-    const { touristPlaces } = useDataContext(); // Obtén los lugares turísticos del contexto
-    const { width: viewportWidth } = Dimensions.get('window');
-    const colorScheme = useColorScheme();
+    const { touristPlaces } = useDataContext();  // Obtén los lugares turísticos del contexto
     const [searchText, setSearchText] = useState('');
     const [filteredTouristPlaces, setFilteredTouristPlaces] = useState(touristPlaces);
+    const [sortAscending, setSortAscending] = useState(true);
+    const [filterLiked, setFilterLiked] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        const filtered = touristPlaces.filter(place => {
+        filterAndSortPlaces();
+    }, [searchText, touristPlaces, sortAscending, filterLiked]);
+
+    const filterAndSortPlaces = async () => {
+        let filtered = touristPlaces.filter((place:any) => {
             const searchLower = searchText.toLowerCase();
             const matchesName = place.name.toLowerCase().includes(searchLower);
             const matchesAddress = place.address ? place.address.toLowerCase().includes(searchLower) : false;
             const matchesDistrict = place.districtName ? place.districtName.toLowerCase().includes(searchLower) : false;
-
             return matchesName || matchesAddress || matchesDistrict;
         });
 
+        // Si está activado el filtro de "me gusta"
+        if (filterLiked) {
+            filtered = await filterLikedPlaces(filtered);
+        }
+
+        // Ordenar por nombre de lugar
+        filtered.sort((a: any, b: any) => {
+            if (sortAscending) {
+                return a.name.localeCompare(b.name);
+            } else {
+                return b.name.localeCompare(a.name);
+            }
+        });
+
         setFilteredTouristPlaces(filtered);
-    }, [searchText, touristPlaces]);
+    };
+
+    const filterLikedPlaces = async (places: any[]) => {
+        const likedPlaces = [];
+        for (const place of places) {
+            const likeStatus = await AsyncStorage.getItem(`like_${place.id}`);
+            if (likeStatus && JSON.parse(likeStatus)) {
+                likedPlaces.push(place);
+            }
+        }
+        return likedPlaces;
+    };
 
     const navigateToTouristPlace = (place: any) => {
         router.push({
-            pathname: '/tourist/place-detail',
+            pathname: '/tourist/tourist-item',
             params: { place: JSON.stringify(place) },
         });
-    };
-
-    const renderTouristPlace = ({ item }: { item: any }) => {
-        const frontImage = item.images.find((img: any) => img.frontPage)?.filePath;
-
-        return (
-            <TouchableOpacity onPress={() => navigateToTouristPlace(item)}>
-                <View className="bg-white shadow-md rounded-lg mb-4 p-4 border border-gray-200">
-                    {frontImage && (
-                        <Image
-                            source={{ uri: frontImage }}
-                            className="w-[80vw] h-48 rounded-md mb-4"
-                            contentFit="cover"
-                            cachePolicy="memory-disk"
-                        />
-                    )}
-                    <Text className="text-lg font-bold text-gray-800">{item.name}</Text>
-                    {item.address && <Text className="text-gray-600">Address: {item.address}</Text>}
-                    {item.districtName && <Text className="text-gray-600">District: {item.districtName}</Text>}
-                </View>
-            </TouchableOpacity>
-        );
     };
 
     return (
         <Screen>
             <Stack.Screen
                 options={{
-                    headerTitle: "Lugares Turísticos",
                     headerShown: false,
                 }}
             />
-            <View className="pl-4 pb-1 mt-10 shadow-md rounded-lg items-start">
+
+            {/* Cabecera con logo, flecha de retroceso, texto y PNG */}
+            <View className="bg-blue-100 flex-row items-center justify-between pt-10 pr-4 pb-4 rounded-b-lg">
+                {/* Logo al centro */}
                 <Image
                     source={require('../../../../assets/logo.png')}
-                    style={{ width: 90, height: 60, resizeMode: 'contain' }}
+                    style={{ width: 130, height: 60, resizeMode: 'contain' }}
+                />
+
+                {/* Imagen PNG a la derecha */}
+                <Image
+                    source={require('../../../../assets/g25.png')}  // Cambia a tu imagen PNG
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
                 />
             </View>
 
+            {/* Barra de búsqueda y controles de orden */}
+            <View className="flex-row items-center justify-between px-4 bg-blue-100">
+                <View className="flex-row items-center bg-white rounded-lg border border-blue-100 shadow-sm p-3 flex-1">
+                    <Ionicons name="search" size={24} color="#555" />
+                    <TextInput
+                        placeholder="Buscar..."
+                        value={searchText}
+                        onChangeText={setSearchText}
+                        className="flex-1 px-3 text-base text-black"
+                    />
+                    {searchText.length > 0 && (
+                        <TouchableOpacity onPress={() => setSearchText('')}>
+                            <Ionicons name="close-circle" size={24} />
+                        </TouchableOpacity>
+                    )}
+                </View>
+                <TouchableOpacity onPress={() => setSortAscending(!sortAscending)}>
+                    <Ionicons name={sortAscending ? "arrow-up" : "arrow-down"} size={24} color="#555" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setFilterLiked(!filterLiked)}>
+                    <Ionicons name="heart" size={24} color={filterLiked ? "red" : "#555"} />
+                </TouchableOpacity>
+            </View>
+
+            {/* Mostrar texto de resultado de búsqueda */}
+            {searchText ? (
+                <Text className="bg-blue-100 px-4 pb-1 mb-2 text-gray-500">
+                    Total de resultado: {filteredTouristPlaces.length} lugares turísticos
+                </Text>
+            ) : (
+                <Text className="bg-blue-100 px-4 pb-1 mb-2 text-gray-500">
+                    Visitamos {touristPlaces.length} lugares turísticos
+                </Text>
+            )}
+
+            {/* Lista de lugares turísticos */}
             <FlatList
                 data={filteredTouristPlaces}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={renderTouristPlace}
+                renderItem={({ item }) => (
+                    <TouristPlaceCard
+                        place={item}
+                        onPress={() => navigateToTouristPlace(item)}
+                    />
+                )}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                className="p-4"
-                ListHeaderComponent={
-                    <View className="flex-row items-center px-4 mb-4 bg-white rounded-lg border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
-                        <Ionicons name="search" size={24} color={colorScheme === 'dark' ? '#888' : '#555'} />
-                        <TextInput
-                            placeholder="Buscar por nombre, dirección o distrito"
-                            placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
-                            value={searchText}
-                            onChangeText={setSearchText}
-                            className="flex-1 px-3 py-3.5 text-base text-black dark:text-white"
-                        />
-                        {searchText.length > 0 && (
-                            <TouchableOpacity onPress={() => setSearchText('')}>
-                                <Ionicons name="close-circle" size={24} color={colorScheme === 'dark' ? 'white' : 'black'} />
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                }
             />
         </Screen>
     );
