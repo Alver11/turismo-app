@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
@@ -11,7 +11,6 @@ interface TouristPlaceCardProps {
 }
 
 export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardProps) {
-    const { width: viewportWidth } = Dimensions.get('window');
     const frontImage = place.images.find((img: any) => img.frontPage)?.filePath;
     const [liked, setLiked] = useState(false);
 
@@ -25,7 +24,7 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
                 }
             };
             loadLikeStatus();
-        }, [place.id]) // Se asegura de ejecutarse cuando la pantalla está en foco y el ID del lugar cambia
+        }, [place.id])
     );
 
     const toggleLike = async () => {

@@ -7,7 +7,6 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
     const [events, setEvents] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
     const [touristPlaces, setTouristPlaces] = useState<any[]>([]);
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const loadData = async () => {
@@ -38,10 +37,8 @@ export const DataContextProvider = ({ children }: { children: React.ReactNode })
         await loadData();
     };
 
-    const toggleDarkMode = () => setIsDarkMode(prev => !prev);
-
     return (
-        <DataContext.Provider value={{ events, categories, touristPlaces, isDarkMode, toggleDarkMode, refreshData, loading }}>
+        <DataContext.Provider value={{ events, categories, touristPlaces, refreshData, loading }}>
             {children}
         </DataContext.Provider>
     );

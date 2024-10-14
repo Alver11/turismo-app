@@ -1,59 +1,59 @@
-import { useState, useEffect } from 'react';
-import { View, FlatList, TextInput, TouchableOpacity, Dimensions, Text, Image } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Screen } from '../../../../src/components/Screen';
-import { useDataContext } from '../../../../src/context/DataContext';
-import { Stack, useRouter } from 'expo-router';
-import TouristPlaceCard from '../../../../src/components/TouristPlaceCard';  // Importamos el componente
-import AsyncStorage from "@react-native-async-storage/async-storage";  // Para manejar likes (me gusta)
+import { useState, useEffect } from 'react'
+import { View, FlatList, TextInput, TouchableOpacity, Text, Image } from 'react-native'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import { Screen } from '../../../../src/components/Screen'
+import { useDataContext } from '../../../../src/context/DataContext'
+import { Stack, useRouter } from 'expo-router'
+import TouristPlaceCard from '../../../../src/components/TouristPlaceCard'
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function TouristListScreen() {
-    const { touristPlaces } = useDataContext();  // Obtén los lugares turísticos del contexto
-    const [searchText, setSearchText] = useState('');
-    const [filteredTouristPlaces, setFilteredTouristPlaces] = useState(touristPlaces);
-    const [sortAscending, setSortAscending] = useState(true);
-    const [filterLiked, setFilterLiked] = useState(false);
-    const router = useRouter();
+    const { touristPlaces } = useDataContext()  // Obtén los lugares turísticos del contexto
+    const [searchText, setSearchText] = useState('')
+    const [filteredTouristPlaces, setFilteredTouristPlaces] = useState(touristPlaces)
+    const [sortAscending, setSortAscending] = useState(true)
+    const [filterLiked, setFilterLiked] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
-        filterAndSortPlaces();
-    }, [searchText, touristPlaces, sortAscending, filterLiked]);
+        filterAndSortPlaces()
+    }, [searchText, touristPlaces, sortAscending, filterLiked])
 
     const filterAndSortPlaces = async () => {
         let filtered = touristPlaces.filter((place:any) => {
-            const searchLower = searchText.toLowerCase();
-            const matchesName = place.name.toLowerCase().includes(searchLower);
-            const matchesAddress = place.address ? place.address.toLowerCase().includes(searchLower) : false;
-            const matchesDistrict = place.districtName ? place.districtName.toLowerCase().includes(searchLower) : false;
-            return matchesName || matchesAddress || matchesDistrict;
+            const searchLower = searchText.toLowerCase()
+            const matchesName = place.name.toLowerCase().includes(searchLower)
+            const matchesAddress = place.address ? place.address.toLowerCase().includes(searchLower) : false
+            const matchesDistrict = place.districtName ? place.districtName.toLowerCase().includes(searchLower) : false
+            return matchesName || matchesAddress || matchesDistrict
         });
 
         // Si está activado el filtro de "me gusta"
         if (filterLiked) {
-            filtered = await filterLikedPlaces(filtered);
+            filtered = await filterLikedPlaces(filtered)
         }
 
         // Ordenar por nombre de lugar
         filtered.sort((a: any, b: any) => {
             if (sortAscending) {
-                return a.name.localeCompare(b.name);
+                return a.name.localeCompare(b.name)
             } else {
-                return b.name.localeCompare(a.name);
+                return b.name.localeCompare(a.name)
             }
         });
 
-        setFilteredTouristPlaces(filtered);
+        setFilteredTouristPlaces(filtered)
     };
 
     const filterLikedPlaces = async (places: any[]) => {
         const likedPlaces = [];
         for (const place of places) {
-            const likeStatus = await AsyncStorage.getItem(`like_${place.id}`);
+            const likeStatus = await AsyncStorage.getItem(`like_${place.id}`)
             if (likeStatus && JSON.parse(likeStatus)) {
-                likedPlaces.push(place);
+                likedPlaces.push(place)
             }
         }
-        return likedPlaces;
+        return likedPlaces
     };
 
     const navigateToTouristPlace = (place: any) => {

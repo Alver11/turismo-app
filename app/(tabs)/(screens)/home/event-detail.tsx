@@ -4,7 +4,6 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { Screen } from '../../../../src/components/Screen';
 import { Image } from 'expo-image';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React, { useState } from 'react';
 
 export default function EventDetail() {
     const { event } = useLocalSearchParams();
@@ -13,8 +12,6 @@ export default function EventDetail() {
     const paddingHorizontal = 16;
     const imageWidth = viewportWidth - paddingHorizontal * 2;
     const colorScheme = useColorScheme();
-
-    const [showFullDescription, setShowFullDescription] = useState(false);
 
     interface ImageItem {
         id: number;
@@ -36,10 +33,6 @@ export default function EventDetail() {
         const lng = parsedEvent.lng;
         const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
         Linking.openURL(url);
-    };
-
-    const toggleDescription = () => {
-        setShowFullDescription(!showFullDescription);
     };
 
     return (

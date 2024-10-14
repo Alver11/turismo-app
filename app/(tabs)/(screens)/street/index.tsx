@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, Linking } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { Screen } from '../../../../src/components/Screen'
 import { Stack, useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'

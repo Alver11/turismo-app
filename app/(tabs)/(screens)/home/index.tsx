@@ -8,12 +8,12 @@ import { useDataContext } from '../../../../src/context/DataContext';
 import { Screen } from '../../../../src/components/Screen';
 
 export default function Home() {
-    const { events, categories, isDarkMode, toggleDarkMode, refreshData } = useDataContext();  // Incluye refreshData desde el contexto
+    const { events, categories, isDarkMode, refreshData } = useDataContext();
     const colorScheme = useColorScheme();
     const { width: viewportWidth } = Dimensions.get('window');
     const [searchText, setSearchText] = useState('');
     const [filteredCategories, setFilteredCategories] = useState(categories);
-    const [refreshing, setRefreshing] = useState(false);  // Estado para manejar el refresco
+    const [refreshing, setRefreshing] = useState(false);
 
     const router = useRouter();
 
