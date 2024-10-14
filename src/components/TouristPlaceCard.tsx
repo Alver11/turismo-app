@@ -34,7 +34,7 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
     };
 
     return (
-        <View className="bg-white shadow-md rounded-xl m-2 border border-gray-200" style={{ padding: 10 }}>
+        <View className="bg-white shadow-md rounded-xl m-2 border dark:bg-gray-800 border-gray-200 dark:border-gray-900" style={{ padding: 10 }}>
             {/* Imagen */}
             {frontImage && (
                 <Image
@@ -49,8 +49,8 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
                 {/* Título y botón de me gusta */}
                 <View className="flex-1">
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{ width: 3, height: 40, backgroundColor: 'green', marginRight: 10 }} />
-                        <Text className="text-lg mr-4 font-bold text-gray-800">{place.name}</Text>
+                        <View className="bg-orange-600 mr-2" style={{ width: 3, height: 40 }} />
+                        <Text className="text-lg mr-4 font-bold text-gray-800 dark:text-gray-300">{place.name}</Text>
                     </View>
                 </View>
 
@@ -83,7 +83,7 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
 
             <View className="pt-2">
                 {/* Distrito */}
-                <Text className="text-gray-600">
+                <Text className="text-gray-600 dark:text-gray-300">
                     <Text className="font-bold">Distrito: </Text>{place.districtName}
                 </Text>
 
@@ -91,14 +91,14 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                         <Ionicons name="location-outline" size={18} color="gray" />
-                        <Text className="text-gray-600 ml-2" style={{ flex: 1 }}>
+                        <Text className="text-gray-600 dark:text-gray-300 ml-2" style={{ flex: 1 }}>
                             {place.address}
                         </Text>
                     </View>
 
                     {/* Botón Ver información */}
                     <TouchableOpacity onPress={onPress}>
-                        <Text className="text-green-600 font-bold">Ver más...</Text>
+                        <Text className="text-green-600 font-bold text-lg">Ver más...</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -42,7 +42,14 @@ export default function EventDetail() {
                     headerLeft: () => null,
                     headerTitle: "Noticias / Eventos",
                     headerShadowVisible: false,
-                    headerShown: true
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colorScheme === 'dark' ? '#4b5563' : '#f3f4f6',  // Colores de Tailwind
+                    },
+                    headerTitleStyle: {
+                        color: colorScheme === 'dark' ? '#ffffff' : '#000000',
+                    },
+                    headerTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
                 }}
             />
             <ScrollView>

@@ -5,12 +5,12 @@ import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface TouristPlaceDetailsProps {
-    parametro: any;  // El lugar turístico que se recibe como prop
+    parameter: any;
 }
 
-export const TouristPlaceDetails = ({ parametro }: TouristPlaceDetailsProps) => {
+export const TouristPlaceDetails = ({ parameter }: TouristPlaceDetailsProps) => {
     const { width: viewportWidth } = Dimensions.get('window');
-    const parsedPlace = parametro;
+    const parsedPlace = parameter;
     const [liked, setLiked] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
@@ -66,8 +66,8 @@ export const TouristPlaceDetails = ({ parametro }: TouristPlaceDetailsProps) => 
                 {/* Título del lugar */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{ width: 3, height: 50, backgroundColor: 'green', marginRight: 10 }} />
-                        <Text className="text-2xl font-bold text-gray-800">{parsedPlace?.name}</Text>
+                        <View className="bg-orange-600 mr-2" style={{ width: 3, height: 50 }} />
+                        <Text className="text-2xl font-bold text-gray-800 dark:text-gray-200">{parsedPlace?.name}</Text>
                     </View>
                 </View>
             </View>
@@ -129,7 +129,7 @@ export const TouristPlaceDetails = ({ parametro }: TouristPlaceDetailsProps) => 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
                             <Ionicons name="location-outline" size={20} color="gray" />
-                            <Text className="ml-2 text-base text-gray-600">{parsedPlace.address}</Text>
+                            <Text className="ml-2 text-base text-gray-600 dark:text-gray-300">{parsedPlace.address}</Text>
                         </View>
                         <TouchableOpacity onPress={toggleLike}>
                             <Ionicons name="heart" size={24} color={liked ? 'red' : 'gray'} />
@@ -139,13 +139,13 @@ export const TouristPlaceDetails = ({ parametro }: TouristPlaceDetailsProps) => 
 
                 {/* Distrito */}
                 {parsedPlace?.districtName && (
-                    <Text className="text-base mt-2 text-gray-600">
+                    <Text className="text-base mt-2 text-gray-600 dark:text-gray-300">{parsedPlace.districtName}
                         <Text className="font-bold">Distrito: </Text>{parsedPlace.districtName}
                     </Text>
                 )}
 
                 {/* Descripción */}
-                <Text className="text-base mt-2 text-gray-600">{parsedPlace?.description}</Text>
+                <Text className="text-base mt-2 text-gray-600 dark:text-gray-300">{parsedPlace?.description}</Text>
 
                 {/* Atributos adicionales como el número de celular */}
                 {parsedPlace?.attribute?.length > 0 && parsedPlace.attribute.map((attr: any) => (

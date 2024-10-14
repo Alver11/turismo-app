@@ -1,19 +1,20 @@
 import { Tabs } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
-import {TouchableOpacity} from "react-native";
+import {TouchableOpacity, useColorScheme} from "react-native";
 
 export default function TabsLayout() {
+    const colorScheme = useColorScheme();
     return (
         <Tabs
             screenOptions={{
                 headerShown: false,
                 tabBarActiveTintColor: '#f4661e',
-                tabBarInactiveTintColor: '#666',
+                tabBarInactiveTintColor: colorScheme === 'dark' ? '#aaa9a9' : '#666',
                 tabBarLabelStyle: {
                     fontSize: 12,
                 },
                 tabBarStyle: {
-                    backgroundColor: '#f9f9f9',
+                    backgroundColor: colorScheme === 'dark' ? '#303737' : '#f9f9f9',
                     height: 80,
                     paddingBottom: 25,
                     shadowColor: '#000',

@@ -37,11 +37,11 @@ export default function CategoryDetailScreen() {
             place={item}
             onPress={() => {
                 router.push({
-                    pathname: '/home/tourist-item',  // Ruta del screen destino
+                    pathname: '/home/tourist-item',
                     params: { place: JSON.stringify(item) },
                 });
             }}
-            refreshList={() => {}}
+            //refreshList={() => {}}
         />
     );
 
@@ -52,6 +52,13 @@ export default function CategoryDetailScreen() {
                     headerTitle: parsedCategory?.name,
                     headerShadowVisible: false,
                     headerShown: true,
+                    headerStyle: {
+                        backgroundColor: colorScheme === 'dark' ? '#4b5563' : '#f3f4f6',  // Colores de Tailwind
+                    },
+                    headerTitleStyle: {
+                        color: colorScheme === 'dark' ? '#ffffff' : '#000000',
+                    },
+                    headerTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
                 }}
             />
 
@@ -73,22 +80,22 @@ export default function CategoryDetailScreen() {
                                 contentFit="cover"
                                 cachePolicy="memory-disk"
                             />
-                            <View style={{
-                                position: 'absolute',
-                                bottom: 0,
-                                width: '100%',
-                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                padding: 10,
-                            }}>
-                                <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>
-                                    {parsedCategory.name}
-                                </Text>
-                            </View>
+                            {/*<View style={{*/}
+                            {/*    position: 'absolute',*/}
+                            {/*    bottom: 0,*/}
+                            {/*    width: '100%',*/}
+                            {/*    backgroundColor: 'rgba(0, 0, 0, 0.5)',*/}
+                            {/*    padding: 10,*/}
+                            {/*}}>*/}
+                            {/*    <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>*/}
+                            {/*        {parsedCategory.name}*/}
+                            {/*    </Text>*/}
+                            {/*</View>*/}
                         </View>
                         <View className="flex-row items-center px-4 m-5 mb-4 bg-white rounded-lg border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
                             <Ionicons name="search" size={24} color={colorScheme === 'dark' ? '#888' : '#555'} />
                             <TextInput
-                                placeholder="Buscar por nombre, categoría, dirección o distrito"
+                                placeholder="Buscar..."
                                 placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
                                 value={searchText}
                                 onChangeText={setSearchText}

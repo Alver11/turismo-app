@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { View, FlatList, TextInput, TouchableOpacity, Text, Image } from 'react-native'
+import {View, FlatList, TextInput, TouchableOpacity, Text, Image, useColorScheme} from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Screen } from '../../../../src/components/Screen'
 import { useDataContext } from '../../../../src/context/DataContext'
@@ -13,6 +13,7 @@ export default function TouristListScreen() {
     const [filteredTouristPlaces, setFilteredTouristPlaces] = useState(touristPlaces)
     const [sortAscending, setSortAscending] = useState(true)
     const [filterLiked, setFilterLiked] = useState(false)
+    const colorScheme = useColorScheme();
     const router = useRouter()
 
     useEffect(() => {
@@ -72,12 +73,18 @@ export default function TouristListScreen() {
             />
 
             {/* Cabecera con logo, flecha de retroceso, texto y PNG */}
-            <View className="bg-blue-100 flex-row items-center justify-between pt-10 pr-4 pb-4 rounded-b-lg">
+            <View className="bg-blue-100 dark:bg-gray-800 flex-row items-center justify-between pt-11 pr-4 pb-4 pl-4">
                 {/* Logo al centro */}
-                <Image
-                    source={require('../../../../assets/logo.png')}
-                    style={{ width: 130, height: 60, resizeMode: 'contain' }}
-                />
+                { colorScheme == 'dark' ?
+                    <Image
+                        source={require('../../../../assets/logo-black.png')}
+                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
+                    /> :
+                    <Image
+                        source={require('../../../../assets/logo.png')}
+                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
+                    />
+                }
 
                 {/* Imagen PNG a la derecha */}
                 <Image
@@ -87,22 +94,22 @@ export default function TouristListScreen() {
             </View>
 
             {/* Barra de búsqueda y controles de orden */}
-            <View className="flex-row items-center justify-between px-4 bg-blue-100">
-                <View className="flex-row items-center bg-white rounded-lg border border-blue-100 shadow-sm p-3 flex-1">
+            <View className="flex-row items-center justify-between px-4 bg-blue-100 dark:bg-gray-800">
+                <View className="flex-row items-center rounded-lg border bg-white dark:bg-gray-700 border-blue-100 dark:border-gray-500 shadow-sm p-3 mr-2 flex-1">
                     <Ionicons name="search" size={24} color="#555" />
                     <TextInput
                         placeholder="Buscar..."
                         value={searchText}
                         onChangeText={setSearchText}
-                        className="flex-1 px-3 text-base text-black"
+                        className="flex-1 px-3 text-base text-black dark:text-gray-300"
                     />
                     {searchText.length > 0 && (
                         <TouchableOpacity onPress={() => setSearchText('')}>
-                            <Ionicons name="close-circle" size={24} />
+                            <Ionicons name="close-circle" size={24} color={colorScheme === 'dark' ? 'white' : 'black'} />
                         </TouchableOpacity>
                     )}
                 </View>
-                <TouchableOpacity onPress={() => setSortAscending(!sortAscending)}>
+                <TouchableOpacity className="mr-1" onPress={() => setSortAscending(!sortAscending)}>
                     <Ionicons name={sortAscending ? "arrow-up" : "arrow-down"} size={24} color="#555" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setFilterLiked(!filterLiked)}>
@@ -112,11 +119,11 @@ export default function TouristListScreen() {
 
             {/* Mostrar texto de resultado de búsqueda */}
             {searchText ? (
-                <Text className="bg-blue-100 px-4 pb-1 mb-2 text-gray-500">
+                <Text className="bg-blue-100 dark:bg-gray-800 px-4 pb-1 pt-1 mb-2 text-gray-500 dark:text-gray-300">
                     Total de resultado: {filteredTouristPlaces.length} lugares turísticos
                 </Text>
             ) : (
-                <Text className="bg-blue-100 px-4 pb-1 mb-2 text-gray-500">
+                <Text className="bg-blue-100 dark:bg-gray-800 px-4 pb-1 pt-1 mb-2 text-gray-500 dark:text-gray-300">
                     Visitamos {touristPlaces.length} lugares turísticos
                 </Text>
             )}

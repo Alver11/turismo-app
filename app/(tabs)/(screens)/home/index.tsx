@@ -49,7 +49,7 @@ export default function Home() {
 
     const renderCategoryItem = ({ item }: { item: any }) => (
         <TouchableOpacity onPress={() => navigateToCategoryDetail(item)} style={{ flex: 1, margin: 5 }}>
-            <View className="bg-gray-200 dark:bg-gray-800 p-2 shadow-md rounded-lg items-center">
+            <View className="p-2 shadow-md rounded-lg items-center bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-600">
                 <Image
                     source={{ uri: item.image }}
                     style={{ width: viewportWidth * 0.4, height: viewportWidth * 0.4, borderRadius: 10 }}
@@ -69,11 +69,17 @@ export default function Home() {
                     headerShown: false,
                 }}
             />
-            <View className="pl-4 pb-1 mt-10 shadow-md rounded-lg items-start">
-                <Image
-                    source={require('../../../../assets/logo.png')}
-                    style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                />
+            <View className="pl-4 pb-1 mt-11 shadow-md rounded-lg items-start">
+                { colorScheme == 'dark' ?
+                    <Image
+                        source={require('../../../../assets/logo-black.png')}
+                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
+                    /> :
+                    <Image
+                        source={require('../../../../assets/logo.png')}
+                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
+                    />
+                }
             </View>
             <FlatList
                 data={filteredCategories}
@@ -102,7 +108,7 @@ export default function Home() {
                                     frontImage && (
                                         <View
                                             style={{ width: viewportWidth * 0.85 }}
-                                            className="mr-2 bg-white dark:bg-gray-800 rounded-lg p-2">
+                                            className="mr-2 rounded-lg p-2 bg-white  border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
                                             {/* Imagen con bordes redondeados */}
                                             <Image
                                                 source={{ uri: frontImage }}
