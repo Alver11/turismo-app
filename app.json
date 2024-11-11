@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "turismo-app",
+    "name": "Turismo Cordillera",
     "slug": "turismo-app",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "turismo.app"
+      "bundleIdentifier": "turismo.app",
+      "buildNumber": "3.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,9 +23,6 @@
         "backgroundColor": "#ffffff"
       },
       "package": "turismo.app"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {

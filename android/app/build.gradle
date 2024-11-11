@@ -104,7 +104,7 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
-    namespace = "com.turismo.app"
+    namespace = "turismo.app"
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -114,7 +114,7 @@ android {
         applicationId 'turismo.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 4
         versionName "1.0.0"
     }
     signingConfigs {

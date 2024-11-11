@@ -1,4 +1,4 @@
-package com.turismo.app
+package turismo.app
 
 import android.os.Build
 import android.os.Bundle
