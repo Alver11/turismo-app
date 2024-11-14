@@ -28,6 +28,7 @@
     "expo-status-bar": "~1.12.1",
     "lottie-react-native": "6.7.0",
     "nativewind": "^2.0.11",
+    "openai": "^4.72.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",

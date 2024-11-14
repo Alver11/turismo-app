@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Dimensions, TouchableOpacity, Linking, RefreshC
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useRouter} from "expo-router";
 
 interface TouristPlaceDetailsProps {
     parameter: any;
@@ -17,6 +18,7 @@ export const TouristPlaceDetails = ({ parameter }: TouristPlaceDetailsProps) => 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);  // Para almacenar la imagen seleccionada
     const paddingHorizontal = 16;
     const imageWidth = viewportWidth - paddingHorizontal * 2;
+    const router = useRouter()
 
     useEffect(() => {
         // Cargar el estado de 'me gusta' desde AsyncStorage
@@ -40,6 +42,13 @@ export const TouristPlaceDetails = ({ parameter }: TouristPlaceDetailsProps) => 
         const lng = parsedPlace.lng;
         const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
         Linking.openURL(url);
+    };
+
+    const navigateToView360 = (item: any) => {
+        router.push({
+            pathname: '/tourist/view-360',
+            params: { url: item },
+        });
     };
 
     const onRefresh = async () => {
@@ -139,7 +148,7 @@ export const TouristPlaceDetails = ({ parameter }: TouristPlaceDetailsProps) => 
 
                 {/* Distrito */}
                 {parsedPlace?.districtName && (
-                    <Text className="text-base mt-2 text-gray-600 dark:text-gray-300">{parsedPlace.districtName}
+                    <Text className="text-base mt-2 text-gray-600 dark:text-gray-300">
                         <Text className="font-bold">Distrito: </Text>{parsedPlace.districtName}
                     </Text>
                 )}
@@ -161,6 +170,16 @@ export const TouristPlaceDetails = ({ parameter }: TouristPlaceDetailsProps) => 
                         className="mt-4 mb-5 p-3 bg-blue-500 rounded-lg items-center"
                     >
                         <Text className="text-white font-bold">Ver en Google Maps</Text>
+                    </TouchableOpacity>
+                )}
+
+                {/* Botón para streetView */}
+                {parsedPlace?.streetView && (
+                    <TouchableOpacity
+                        onPress={() => navigateToView360(parsedPlace?.streetView)}
+                        className="mt-4 mb-5 p-3 bg-green-300 rounded-lg items-center"
+                    >
+                        <Text className="text-white font-bold">Street View (360)</Text>
                     </TouchableOpacity>
                 )}
             </View>
