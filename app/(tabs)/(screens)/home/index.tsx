@@ -1,192 +1,5 @@
-/*import { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, Dimensions, RefreshControl } from 'react-native';
-import { useColorScheme } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image } from 'expo-image';
-import { useDataContext } from '../../../../src/context/DataContext';
-import { Screen } from '../../../../src/components/Screen';
-
-export default function Home() {
-    const { events, categories, isDarkMode, refreshData } = useDataContext();
-    const colorScheme = useColorScheme();
-    const { width: viewportWidth } = Dimensions.get('window');
-    const [searchText, setSearchText] = useState('');
-    const [filteredCategories, setFilteredCategories] = useState(categories);
-    const [refreshing, setRefreshing] = useState(false);
-
-    const router = useRouter();
-
-    // Función para manejar la recarga de datos
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true);
-        await refreshData();
-        setRefreshing(false);
-    }, []);
-
-    useEffect(() => {
-        if (categories && categories.length > 0) {
-            const filtered = categories.filter((category: any) =>
-                category.name.toLowerCase().includes(searchText.toLowerCase())
-            );
-            setFilteredCategories(filtered);
-        }
-    }, [searchText, categories]);
-
-    const navigateToEventDetail = (event: any) => {
-        router.push({
-            pathname: '/home/event-detail',
-            params: { event: JSON.stringify(event) },
-        });
-    };
-
-    const navigateToCategoryDetail = (category: any) => {
-        router.push({
-            pathname: '/home/category-detail',
-            params: { category: JSON.stringify(category) },
-        });
-    };
-
-    const renderCategoryItem = ({ item }: { item: any }) => (
-        <TouchableOpacity onPress={() => navigateToCategoryDetail(item)} style={{ flex: 1, margin: 5 }}>
-            <View className="p-2 shadow-md rounded-lg items-center bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-600">
-                <Image
-                    source={{ uri: item.image }}
-                    style={{ width: viewportWidth * 0.4, height: viewportWidth * 0.4, borderRadius: 10 }}
-                    contentFit="cover"
-                    cachePolicy="memory-disk"
-                />
-                <Text className="text-lg font-bold text-center dark:text-gray-300 mt-2">{item.name}</Text>
-            </View>
-        </TouchableOpacity>
-    );
-
-    return (
-        <Screen>
-            <Stack.Screen
-                options={{
-                    headerTitle: "",
-                    headerShown: false,
-                }}
-            />
-            <View className="pl-4 pb-1 mt-11 shadow-md rounded-lg items-start">
-                { colorScheme == 'dark' ?
-                    <Image
-                        source={require('../../../../assets/logo-black.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    /> :
-                    <Image
-                        source={require('../../../../assets/logo.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    />
-                }
-            </View>
-            <FlatList
-                data={filteredCategories}
-                renderItem={renderCategoryItem}
-                keyExtractor={(item) => item.id.toString()}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 30 }}
-                className="p-4"
-                numColumns={2}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                        colors={[isDarkMode ? 'white' : 'black']}
-                    />
-                }
-                ListHeaderComponent={
-                    <>
-                        <FlatList
-                            data={events}
-                            horizontal
-                            renderItem={({ item }) => {
-                                const frontImage = item.images && item.images.length > 0 ? item.images[0].filePath : null;
-
-                                return (
-                                    frontImage && (
-                                        <View
-                                            style={{ width: viewportWidth * 0.85 }}
-                                            className="mr-2 rounded-lg p-2 bg-white  border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
-
-                                            <Image
-                                                source={{ uri: frontImage }}
-                                                style={{
-                                                    width: '100%',
-                                                    height: 200,
-                                                    borderRadius: 15,
-                                                    backgroundColor: '#ffffff'
-                                                }}
-                                                contentFit="cover"
-                                                cachePolicy="memory-disk"
-                                            />
-
-
-                                            <View style={{ padding: 10, flexDirection: 'row' }}>
-
-                                                <View className="bg-black dark:bg-gray-300 mr-2" style={{ width: 3 }} />
-
-
-                                                <View style={{ flex: 1 }}>
-                                                    <Text className="text-lg font-bold text-gray-700 dark:text-gray-300">
-                                                        {item.name}
-                                                    </Text>
-                                                    <Text className="text-sm text-gray-700 dark:text-gray-400" style={{ marginVertical: 5 }}>
-                                                        {item.description.length > 100
-                                                            ? `${item.description.substring(0, 100)}...`
-                                                            : item.description}
-                                                    </Text>
-
-                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Text className="text-sm text-gray-700 dark:text-gray-400">
-                                                            { item.updated_at }
-                                                        </Text>
-                                                        <TouchableOpacity onPress={() => navigateToEventDetail(item)}>
-                                                            <Text className="text-lg font-bold text-orange-700">
-                                                                ver más...
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )
-                                );
-                            }}
-                            keyExtractor={(item) => item.id.toString()}
-                            showsHorizontalScrollIndicator={false}
-                        />
-
-                        <Text className="text-lg pt-2">
-                            Categorías
-                        </Text>
-
-                        <View className="flex-row items-center px-4 mb-4 bg-white rounded-lg border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
-                            <Ionicons name="search" size={24} color={colorScheme === 'dark' ? '#888' : '#555'} />
-                            <TextInput
-                                placeholder="Buscar..."
-                                placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
-                                value={searchText}
-                                onChangeText={setSearchText}
-                                className="flex-1 px-3 py-3.5 text-base text-black dark:text-white"
-                            />
-                            {searchText.length > 0 && (
-                                <TouchableOpacity onPress={() => setSearchText('')}>
-                                    <Ionicons name="close-circle" size={24} color={colorScheme === 'dark' ? 'white' : 'black'} />
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                    </>
-                }
-            />
-        </Screen>
-    );
-}
-*/
-
 import { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Dimensions, TextInput, RefreshControl } from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, Dimensions, TextInput, RefreshControl, ScrollView} from 'react-native';
 import { useColorScheme } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -194,6 +7,7 @@ import { Image } from 'expo-image';
 import { useDataContext } from '../../../../src/context/DataContext';
 import { Screen } from '../../../../src/components/Screen';
 import TouristPlaceCard from "../../../../src/components/TouristPlaceCard";
+import HeaderWithSOS from "../../../../src/components/HeaderWithSOS";
 
 export default function Home() {
     const { touristPlaces, events, categories, refreshData } = useDataContext(); // Obtén datos del contexto
@@ -225,7 +39,6 @@ export default function Home() {
             const selectedCategory = questions.find((q) => q.question === question)?.category;
 
             if (selectedCategory) {
-                console.log("Filtrando por categoría:", selectedCategory); // Depuración
                 setFilteredTouristPlaces(
                     touristPlaces.filter((place: any) =>
                         place.categories.some((category: any) => {
@@ -283,9 +96,10 @@ export default function Home() {
             <TouchableOpacity
                 onPress={() => handleChatQuestion(item.question)}
                 style={{
+                    flex: 1,
                     paddingHorizontal: 16,
                     paddingVertical: 8,
-                    marginRight: 8,
+                    margin: 8,
                     borderRadius: 8,
                     backgroundColor: isActive ? 'green' : colorScheme === 'dark' ? '#444' : '#ddd',
                 }}
@@ -294,6 +108,7 @@ export default function Home() {
                     style={{
                         fontSize: 16,
                         color: isActive ? 'white' : colorScheme === 'dark' ? '#ccc' : '#000',
+                        textAlign: 'center',
                     }}
                 >
                     {item.question}
@@ -302,20 +117,70 @@ export default function Home() {
         );
     };
 
-    const renderTouristPlace = ({ item }: { item: any }) => (
-        <TouchableOpacity onPress={() => navigateToTouristPlace(item)} style={{ flex: 1, margin: 5 }}>
-            <View className="p-2 shadow-md rounded-lg items-center bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-600">
-                <Image
-                    source={{ uri: item.image }}
-                    style={{ width: viewportWidth * 0.4, height: viewportWidth * 0.4, borderRadius: 10 }}
-                    contentFit="cover"
-                    cachePolicy="memory-disk"
-                />
-                <Text className="text-lg font-bold text-center dark:text-gray-300 mt-2">{item.name}</Text>
-                <Text className="text-sm text-center dark:text-gray-400">{item.address}</Text>
-            </View>
-        </TouchableOpacity>
-    );
+    const renderEventItem = ({ item }: { item: any }) => {
+        const frontImage = item.images && item.images.length > 0 ? item.images[0].filePath : null;
+
+        return (
+            frontImage && (
+                <TouchableOpacity
+                    style={{
+                        width: viewportWidth * 0.85,
+                        marginRight: 10,
+                        padding: 10,
+                        backgroundColor: colorScheme === 'dark' ? '#2d2d2d' : '#ffffff',
+                        borderRadius: 10,
+                        borderWidth: 1,
+                        borderColor: colorScheme === 'dark' ? '#444' : '#ccc',
+                        shadowColor: '#000',
+                        shadowOpacity: 0.1,
+                        shadowRadius: 5,
+                    }}
+                    onPress={() => navigateToEventDetail(item)}
+                >
+                    <Image
+                        source={{ uri: frontImage }}
+                        style={{
+                            width: '100%',
+                            height: 200,
+                            borderRadius: 10,
+                            backgroundColor: '#ffffff',
+                        }}
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
+                    />
+                    <Text
+                        style={{
+                            marginVertical: 8,
+                            fontSize: 16,
+                            fontWeight: 'bold',
+                            color: colorScheme === 'dark' ? '#ffffff' : '#333',
+                        }}
+                    >
+                        {item.name}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            color: colorScheme === 'dark' ? '#aaaaaa' : '#666',
+                        }}
+                    >
+                        {item.description.length > 100
+                            ? `${item.description.substring(0, 100)}...`
+                            : item.description}
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            color: colorScheme === 'dark' ? '#cccccc' : '#999',
+                            marginTop: 5,
+                        }}
+                    >
+                        {item.updated_at}
+                    </Text>
+                </TouchableOpacity>
+            )
+        );
+    };
 
     const renderCategoryItem = ({ item }: { item: any }) => (
         <TouchableOpacity onPress={() => navigateToCategoryDetail(item)} style={{ flex: 1, margin: 5 }}>
@@ -339,159 +204,110 @@ export default function Home() {
                     headerShown: false,
                 }}
             />
-            <View className="pl-4 pb-1 mt-11 shadow-md rounded-lg items-start">
-                {colorScheme == 'dark' ? (
-                    <Image
-                        source={require('../../../../assets/logo-black.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    />
-                ) : (
-                    <Image
-                        source={require('../../../../assets/logo.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    />
-                )}
-            </View>
 
-            {/* Chat Section */}
-            <View className="p-4 dark:bg-gray-800">
-                <Text className="text-lg font-bold text-black dark:text-white mb-2">
-                    Selecciona qué puedes hacer hoy
-                </Text>
-                <FlatList
-                    data={questions}
-                    horizontal
-                    renderItem={renderChatQuestion}
-                    keyExtractor={(item) => item.question}
-                    showsHorizontalScrollIndicator={false}
-                />
-            </View>
+            {/* Cabecera Reutilizable con Botón SOS */}
+            <HeaderWithSOS />
 
-            {/* Tourist Places or Events/Categories */}
-            {activeQuestion ? (
-                <FlatList
-                    data={filteredTouristPlaces}
-                    keyExtractor={(item) => item.id.toString() }
-                    renderItem={({ item }) => (
+            {/* FlatList Principal */}
+            <FlatList
+                key={activeQuestion ? 'list-single-column' : 'list-multi-column'}
+                data={activeQuestion ? filteredTouristPlaces : filteredCategories}
+                keyExtractor={(item: any) => item.id.toString()}
+                numColumns={activeQuestion ? 1 : 2} // Si hay pregunta activa, mostrar en una columna
+                renderItem={({ item }) =>
+                    activeQuestion ? (
                         <TouristPlaceCard
                             place={item}
                             onPress={() => navigateToTouristPlace(item)}
                         />
-                    )}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 80 }}
-                />
-                /*<FlatList
-                    data={filteredCategories}
-                    renderItem={renderCategoryItem}
-                    keyExtractor={(item) => item.id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 30 }}
-                    className="p-4"
-                    numColumns={2}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                />*/
-            ) : (
-                <FlatList
-                    data={filteredCategories}
-                    renderItem={renderCategoryItem}
-                    keyExtractor={(item) => item.id.toString()}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 30 }}
-                    className="p-4"
-                    numColumns={2}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                            colors={[colorScheme === 'dark' ? 'white' : 'black']}
-                        />
-                    }
-                    ListHeaderComponent={
+                    ) : (
+                        renderCategoryItem({ item })
+                    )
+                }
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 30 }}
+                nestedScrollEnabled={true} // Habilita el desplazamiento interno
+
+                // Agregar encabezados antes de la lista de elementos
+                ListHeaderComponent={
                     <>
-                        <FlatList
-                            data={events}
-                            horizontal
-                            renderItem={({ item }) => {
-                                const frontImage = item.images && item.images.length > 0 ? item.images[0].filePath : null;
-
-                                return (
-                                    frontImage && (
-                                        <View
-                                            style={{ width: viewportWidth * 0.85 }}
-                                            className="mr-2 rounded-lg p-2 bg-white  border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
-                                            <Image
-                                                source={{ uri: frontImage }}
-                                                style={{
-                                                    width: '100%',
-                                                    height: 200,
-                                                    borderRadius: 15,
-                                                    backgroundColor: '#ffffff'
-                                                }}
-                                                contentFit="cover"
-                                                cachePolicy="memory-disk"
-                                            />
-                                            <View style={{ padding: 10, flexDirection: 'row' }}>
-                                                <View className="bg-black dark:bg-gray-300 mr-2" style={{ width: 3 }} />
-                                                <View style={{ flex: 1 }}>
-                                                    <Text className="text-lg font-bold text-gray-700 dark:text-gray-300">
-                                                        {item.name}
-                                                    </Text>
-                                                    <Text className="text-sm text-gray-700 dark:text-gray-400" style={{ marginVertical: 5 }}>
-                                                        {item.description.length > 100
-                                                            ? `${item.description.substring(0, 100)}...`
-                                                            : item.description}
-                                                    </Text>
-                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Text className="text-sm text-gray-700 dark:text-gray-400">
-                                                            { item.updated_at }
-                                                        </Text>
-                                                        <TouchableOpacity onPress={() => navigateToEventDetail(item)}>
-                                                            <Text className="text-lg font-bold text-orange-700">
-                                                                ver más...
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    )
-                                );
-                            }}
-                            keyExtractor={(item) => item.id.toString()}
-                            showsHorizontalScrollIndicator={false}
-                        />
-
-                        <Text className="text-lg pt-2">
-                            Categorías
-                        </Text>
-
-                        <View className="flex-row items-center px-4 mb-4 bg-white rounded-lg border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
-                            <Ionicons name="search" size={24} color={colorScheme === 'dark' ? '#888' : '#555'} />
-                            <TextInput
-                                placeholder="Buscar..."
-                                placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
-                                value={searchText}
-                                onChangeText={setSearchText}
-                                className="flex-1 px-3 py-3.5 text-base text-black dark:text-white"
+                        {/* Chat Section */}
+                        <View className="p-4 dark:bg-gray-800">
+                            <Text className="text-lg font-bold text-black dark:text-white mb-2">
+                                Selecciona una de las opciones
+                            </Text>
+                            <FlatList
+                                data={questions}
+                                renderItem={renderChatQuestion}
+                                keyExtractor={(item) => item.question}
+                                numColumns={2}
+                                columnWrapperStyle={{ justifyContent: 'space-between' }}
+                                showsHorizontalScrollIndicator={false}
+                                nestedScrollEnabled={true} // Permite scroll dentro de FlatList
                             />
-                            {searchText.length > 0 && (
-                                <TouchableOpacity onPress={() => setSearchText('')}>
-                                    <Ionicons name="close-circle" size={24} color={colorScheme === 'dark' ? 'white' : 'black'} />
-                                </TouchableOpacity>
-                            )}
                         </View>
+
+                        {/* Noticias y Eventos */}
+                        {!activeQuestion && (
+                            <View className="p-4 dark:bg-gray-800">
+                                <Text className="text-lg font-bold text-black dark:text-white mb-0">
+                                    Noticias y Eventos
+                                </Text>
+                                {/* Línea Naranja */}
+                                <View className="h-1 w-11/12 bg-orange-500 mb-4" />
+                                <FlatList
+                                    data={events}
+                                    horizontal
+                                    renderItem={renderEventItem}
+                                    keyExtractor={(item) => item.id.toString()}
+                                    showsHorizontalScrollIndicator={false}
+                                    nestedScrollEnabled={true}
+                                />
+                            </View>
+                        )}
+
+                        {/* Categorías (Si no hay pregunta activa) */}
+                        {!activeQuestion && (
+                            <View className="p-4 dark:bg-gray-800">
+                                <Text className="text-lg font-bold text-black dark:text-white mb-0">
+                                    Busca aqui tu destino
+                                </Text>
+                                <View className="h-1 w-11/12 bg-orange-500 mb-4" />
+                                <View className="flex-row items-center px-4 mb-0 bg-white rounded-lg border border-gray-300 shadow-sm dark:bg-gray-800 dark:border-gray-600">
+                                    <Ionicons
+                                        name="search"
+                                        size={24}
+                                        color={colorScheme === 'dark' ? '#888' : '#555'}
+                                    />
+                                    <TextInput
+                                        placeholder="Fitre la categoría"
+                                        placeholderTextColor={colorScheme === 'dark' ? '#888' : '#555'}
+                                        value={searchText}
+                                        onChangeText={setSearchText}
+                                        className="flex-1 px-3 py-3.5 text-base text-black dark:text-white"
+                                    />
+                                    {searchText.length > 0 && (
+                                        <TouchableOpacity onPress={() => setSearchText('')}>
+                                            <Ionicons
+                                                name="close-circle"
+                                                size={24}
+                                                color={colorScheme === 'dark' ? 'white' : 'black'}
+                                            />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                            </View>
+                        )}
                     </>
-                    }
-                />
-            )}
+                }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={[colorScheme === 'dark' ? 'white' : 'black']}
+                    />
+                }
+            />
         </Screen>
     );
 }
-
-

@@ -4,6 +4,7 @@ import { Stack, useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import {Image} from "expo-image"
 import {FontAwesome6} from "@expo/vector-icons";
+import HeaderWithSOS from "../../../../src/components/HeaderWithSOS";
 
 const districts = [
     {
@@ -142,18 +143,8 @@ export default function StreetView() {
                     headerShown: false,
                 }}
             />
-            <View className="pl-4 pb-1 mt-12 shadow-md rounded-lg items-start">
-                { colorScheme == 'dark' ?
-                    <Image
-                        source={require('../../../../assets/logo-black.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    /> :
-                    <Image
-                        source={require('../../../../assets/logo.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    />
-                }
-            </View>
+            {/* Cabecera Reutilizable con Botón SOS */}
+            <HeaderWithSOS />
             {/* Lista de distritos con sus lugares */}
             <FlatList
                 data={districts}

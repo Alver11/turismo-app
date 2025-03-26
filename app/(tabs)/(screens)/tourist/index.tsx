@@ -6,6 +6,7 @@ import { useDataContext } from '../../../../src/context/DataContext'
 import { Stack, useRouter } from 'expo-router'
 import TouristPlaceCard from '../../../../src/components/TouristPlaceCard'
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import HeaderWithSOS from "../../../../src/components/HeaderWithSOS";
 
 export default function TouristListScreen() {
     const { touristPlaces } = useDataContext()  // Obtén los lugares turísticos del contexto
@@ -71,34 +72,15 @@ export default function TouristListScreen() {
                     headerShown: false,
                 }}
             />
-
-            {/* Cabecera con logo, flecha de retroceso, texto y PNG */}
-            <View className="bg-blue-100 dark:bg-gray-800 flex-row items-center justify-between pt-11 pr-4 pb-4 pl-4">
-                {/* Logo al centro */}
-                { colorScheme == 'dark' ?
-                    <Image
-                        source={require('../../../../assets/logo-black.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    /> :
-                    <Image
-                        source={require('../../../../assets/logo.png')}
-                        style={{ width: 90, height: 60, resizeMode: 'contain' }}
-                    />
-                }
-
-                {/* Imagen PNG a la derecha */}
-                <Image
-                    source={require('../../../../assets/g25.png')}  // Cambia a tu imagen PNG
-                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                />
-            </View>
+            {/* Cabecera Reutilizable con Botón SOS */}
+            <HeaderWithSOS />
 
             {/* Barra de búsqueda y controles de orden */}
-            <View className="flex-row items-center justify-between px-4 bg-blue-100 dark:bg-gray-800">
+            <View className="flex-row items-center justify-between px-4 pt-2">
                 <View className="flex-row items-center rounded-lg border bg-white dark:bg-gray-700 border-blue-100 dark:border-gray-500 shadow-sm p-3 mr-2 flex-1">
                     <Ionicons name="search" size={24} color="#555" />
                     <TextInput
-                        placeholder="Buscar..."
+                        placeholder="Buscar por distrito, nombre, descripción..."
                         value={searchText}
                         onChangeText={setSearchText}
                         className="flex-1 px-3 text-base text-black dark:text-gray-300"
@@ -119,11 +101,11 @@ export default function TouristListScreen() {
 
             {/* Mostrar texto de resultado de búsqueda */}
             {searchText ? (
-                <Text className="bg-blue-100 dark:bg-gray-800 px-4 pb-1 pt-1 mb-2 text-gray-500 dark:text-gray-300">
+                <Text className="px-4 pb-1 pt-1 mb-2 text-gray-500 dark:text-gray-300">
                     Total de resultado: {filteredTouristPlaces.length} lugares turísticos
                 </Text>
             ) : (
-                <Text className="bg-blue-100 dark:bg-gray-800 px-4 pb-1 pt-1 mb-2 text-gray-500 dark:text-gray-300">
+                <Text className="px-4 pb-1 pt-1 mb-2 text-gray-500 dark:text-gray-300">
                     Visitamos {touristPlaces.length} lugares turísticos
                 </Text>
             )}

@@ -52,6 +52,15 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
+                name="(screens)/events"
+                options={{
+                    tabBarLabel: 'Eventos',
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome5 name="icons" size={20} color={color} />
+                    ),
+                }}
+            />
+            <Tabs.Screen
                 name="(screens)/tourist"
                 options={{
                     tabBarLabel: 'Turismo',
@@ -63,9 +72,18 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="(screens)/street"
                 options={{
-                    tabBarLabel: 'Street View',
+                    tabBarLabel: 'Vista 360',
                     tabBarIcon: ({ color }) => (
                         <FontAwesome5 name="street-view" size={20} color={color} />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="(screens)/services"
+                options={{
+                    tabBarLabel: 'Servicios',
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome5 name="ambulance" size={20} color={color} />
                     ),
                 }}
             />

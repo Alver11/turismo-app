@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';  // Importa useFocusEffect
+import { useFocusEffect } from '@react-navigation/native';
 
 interface TouristPlaceCardProps {
     place: any;
@@ -14,7 +14,6 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
     const frontImage = place.images.find((img: any) => img.frontPage)?.filePath;
     const [liked, setLiked] = useState(false);
 
-    // useFocusEffect se ejecuta cada vez que la pantalla toma el foco
     useFocusEffect(
         useCallback(() => {
             const loadLikeStatus = async () => {
@@ -30,11 +29,16 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
     const toggleLike = async () => {
         const newLikeStatus = !liked;
         setLiked(newLikeStatus);
-        await AsyncStorage.setItem(`like_${place.id}`, JSON.stringify(newLikeStatus));  // Guardar en AsyncStorage
+        await AsyncStorage.setItem(`like_${place.id}`, JSON.stringify(newLikeStatus));
     };
 
     return (
-        <View className="bg-white shadow-md rounded-xl m-2 border dark:bg-gray-800 border-gray-200 dark:border-gray-900" style={{ padding: 10 }}>
+        <TouchableOpacity
+            onPress={onPress}
+            activeOpacity={0.7} // Da una sensación de clic visual
+            className="bg-white shadow-md rounded-xl m-2 border dark:bg-gray-800 border-gray-200 dark:border-gray-900"
+            style={{ padding: 10 }}
+        >
             {/* Imagen */}
             {frontImage && (
                 <Image
@@ -87,21 +91,14 @@ export default function TouristPlaceCard({ place, onPress }: TouristPlaceCardPro
                     <Text className="font-bold">Distrito: </Text>{place.districtName}
                 </Text>
 
-                {/* Dirección y Ver información en la misma línea */}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 5 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                        <Ionicons name="location-outline" size={18} color="gray" />
-                        <Text className="text-gray-600 dark:text-gray-300 ml-2" style={{ flex: 1 }}>
-                            {place.address}
-                        </Text>
-                    </View>
-
-                    {/* Botón Ver información */}
-                    <TouchableOpacity onPress={onPress}>
-                        <Text className="text-green-600 font-bold text-lg">Ver más...</Text>
-                    </TouchableOpacity>
+                {/* Dirección */}
+                <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, marginTop: 5 }}>
+                    <Ionicons name="location-outline" size={18} color="gray" />
+                    <Text className="text-gray-600 dark:text-gray-300 ml-2" style={{ flex: 1 }}>
+                        {place.address}
+                    </Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }

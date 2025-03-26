@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: 'https://api.cordillera.gov.py/api/v1/',
+    //baseURL: 'http://localhost/api/v1/',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -31,6 +32,15 @@ export const getEvents = async () => {
 export const getTourist = async () => {
     try {
         const response = await api.get('getTourist');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener datos:', error);
+    }
+};
+
+export const getServices = async () => {
+    try {
+        const response = await api.get('getServices');
         return response.data;
     } catch (error) {
         console.error('Error al obtener datos:', error);
