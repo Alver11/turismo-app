@@ -64,7 +64,7 @@ export default function EventDetail() {
                             </Text>
                         </View>
                         <Text className={`text-sm ${colorScheme === 'dark' ? 'text-white' : 'text-black'}`}>
-                            {parsedEvent.updated_at ? parsedEvent.updated_at : 'Fecha no disponible'}
+                            {parsedEvent.updated_at ? parsedEvent.date : 'Fecha no disponible'}
                         </Text>
                     </View>
                 </View>

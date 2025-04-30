@@ -4,10 +4,12 @@ import { useColorScheme } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image } from 'expo-image';
+import { ActivityIndicator } from 'react-native';
 import { useDataContext } from '../../../../src/context/DataContext';
 import { Screen } from '../../../../src/components/Screen';
 import TouristPlaceCard from "../../../../src/components/TouristPlaceCard";
 import HeaderWithSOS from "../../../../src/components/HeaderWithSOS";
+import EventCard from "../../../../src/components/EventCard";
 
 export default function Home() {
     const { touristPlaces, events, categories, refreshData } = useDataContext(); // Obtén datos del contexto
@@ -117,70 +119,9 @@ export default function Home() {
         );
     };
 
-    const renderEventItem = ({ item }: { item: any }) => {
-        const frontImage = item.images && item.images.length > 0 ? item.images[0].filePath : null;
-
-        return (
-            frontImage && (
-                <TouchableOpacity
-                    style={{
-                        width: viewportWidth * 0.85,
-                        marginRight: 10,
-                        padding: 10,
-                        backgroundColor: colorScheme === 'dark' ? '#2d2d2d' : '#ffffff',
-                        borderRadius: 10,
-                        borderWidth: 1,
-                        borderColor: colorScheme === 'dark' ? '#444' : '#ccc',
-                        shadowColor: '#000',
-                        shadowOpacity: 0.1,
-                        shadowRadius: 5,
-                    }}
-                    onPress={() => navigateToEventDetail(item)}
-                >
-                    <Image
-                        source={{ uri: frontImage }}
-                        style={{
-                            width: '100%',
-                            height: 200,
-                            borderRadius: 10,
-                            backgroundColor: '#ffffff',
-                        }}
-                        contentFit="cover"
-                        cachePolicy="memory-disk"
-                    />
-                    <Text
-                        style={{
-                            marginVertical: 8,
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                            color: colorScheme === 'dark' ? '#ffffff' : '#333',
-                        }}
-                    >
-                        {item.name}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 14,
-                            color: colorScheme === 'dark' ? '#aaaaaa' : '#666',
-                        }}
-                    >
-                        {item.description.length > 100
-                            ? `${item.description.substring(0, 100)}...`
-                            : item.description}
-                    </Text>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            color: colorScheme === 'dark' ? '#cccccc' : '#999',
-                            marginTop: 5,
-                        }}
-                    >
-                        {item.updated_at}
-                    </Text>
-                </TouchableOpacity>
-            )
-        );
-    };
+    const renderEventItem = ({ item }: { item: any }) => (
+        <EventCard item={item} onPress={() => navigateToEventDetail(item)} />
+    );
 
     const renderCategoryItem = ({ item }: { item: any }) => (
         <TouchableOpacity onPress={() => navigateToCategoryDetail(item)} style={{ flex: 1, margin: 5 }}>
