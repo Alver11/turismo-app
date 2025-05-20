@@ -13,7 +13,7 @@ export default function TouristItemScreen() {
         <Screen>
             <Stack.Screen
                 options={{
-                    headerTitle:"",
+                    headerTitle: "Detalle del Sitio Turístico",
                     headerShadowVisible: false,
                     headerShown: true,
                     headerStyle: {

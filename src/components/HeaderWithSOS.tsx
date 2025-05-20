@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Modal, FlatList, Linking, useColorScheme } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Image } from "expo-image";
 import { getServices } from "../composable/useApi";  // Asegúrate de importar correctamente
 
@@ -40,7 +41,7 @@ const HeaderWithSOS = () => {
 
                 {/* Botón SOS */}
                 <TouchableOpacity onPress={() => setModalVisible(true)} className="mr-4 bg-red-500 p-2 rounded-full">
-                    <Ionicons name="alert-circle-outline" size={20} color="white" />
+                    <MaterialIcons name="contact-emergency" size={20} color="white" />
                 </TouchableOpacity>
             </View>
 
